@@ -1,0 +1,61 @@
+// data.js — Ótica Precisão · Camada de dados (Supabase)
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const SUPABASE_URL  = 'https://kwonfxmwqraudjvxwhbk.supabase.co';
+const SUPABASE_ANON = 'sb_publishable_zalsVfTLnDaxEP2bzfNlag_xhq15cOk';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+// ---------- Clientes ----------
+
+export async function getClientes() {
+  const { data, error } = await supabase
+    .from('clientes')
+    .select('*')
+    .order('nome');
+  if (error) throw error;
+  return data;
+}
+
+export async function saveClientes(clientes) {
+  if (!Array.isArray(clientes) || clientes.length === 0) return;
+  const { error } = await supabase
+    .from('clientes')
+    .upsert(clientes, { onConflict: 'id' });
+  if (error) throw error;
+}
+
+// ---------- Fichas ----------
+
+export async function getFichas() {
+  const { data, error } = await supabase
+    .from('fichas_consulta')
+    .select('*')
+    .order('data', { ascending: false });
+  if (error) throw error;
+  return data.map(f => ({ ...f, id_cliente: Number(f.id_cliente) }));
+}
+
+export async function saveFichas(fichas) {
+  if (!Array.isArray(fichas) || fichas.length === 0) return;
+  const { error } = await supabase
+    .from('fichas_consulta')
+    .upsert(fichas, { onConflict: 'id' });
+  if (error) throw error;
+}
+
+export async function deleteCliente(id) {
+  const { error } = await supabase
+    .from('clientes')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
+
+export async function deleteFicha(id) {
+  const { error } = await supabase
+    .from('fichas_consulta')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
