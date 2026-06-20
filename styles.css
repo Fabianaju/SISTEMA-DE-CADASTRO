@@ -324,3 +324,13 @@ input,textarea{font-family:inherit;}
   .client-row{flex-direction:column;align-items:flex-start;}
   .client-row .visit{text-align:left;}
 }
+
+/* ---------- Print (oculta UI ao imprimir a página principal) ---------- */
+@media print {
+  .topbar, .toolbar, .back-link, .btn-row, .row-actions,
+  .rx-actions, .confirm-box, #toast, .section-label button {
+    display: none !important;
+  }
+  body { background: #fff; }
+  .container { max-width: 100%; padding: 0; }
+}
